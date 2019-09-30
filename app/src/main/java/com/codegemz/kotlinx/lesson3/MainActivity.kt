@@ -4,7 +4,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.Gravity
-import android.widget.CheckBox
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import org.jetbrains.anko.*
@@ -31,47 +31,62 @@ class MainView : AnkoComponent<MainActivity> {
                 topMargin = dip(30)
             }
 
-            val displayTextView = textView {
-                // you can also write the text right here
-                text = "TextView"
-                textSize = 26f
-                textColor = Color.GRAY
-            }.lparams() {
+            verticalLayout {
                 gravity = Gravity.CENTER_HORIZONTAL
-                topMargin = dip(40)
-            }
-
-            val enterEditText = editText {
-                hint = "EditText"
-            }.lparams(width = matchParent) {
-                gravity = Gravity.CENTER_HORIZONTAL
-                topMargin = dip(40)
-                leftMargin = dip(30)
-                rightMargin = dip(30)
-            }
-
-            val applyButton = button("Apply") {
-                onClick {
-                    val enteredText = enterEditText.text.toString()
-                    if (enteredText.isNotBlank()) {
-                        displayTextView.text = enteredText
-                    }
-                    toast("You pressed the button!")
-                }
-            }.lparams(width = matchParent) {
-                topMargin = dip(40)
                 leftPadding = dip(50)
                 rightPadding = dip(50)
-            }
 
-            checkBox {
-                text = resources.getString(R.string.disable_button)
-                setOnClickListener {
-                    val disableCheckBox = it as CheckBox
-                    applyButton.isEnabled = !disableCheckBox.isChecked
+                val displayTextView = textView {
+                    // you can also write the text right here
+                    text = "TextView"
+                    textSize = 24f
+                    textColor = Color.GRAY
+                }.lparams {
+                    topMargin = dip(40)
                 }
-            }.lparams() {
-                topMargin = dip(40)
+
+                val items = arrayOf("One", "Two", "Three")
+                lateinit var firstSpinner: Spinner
+                lateinit var enterEditText: EditText
+
+                linearLayout {
+                    firstSpinner = spinner {
+                        adapter = ArrayAdapter(ctx, android.R.layout.simple_spinner_dropdown_item, items)
+                    }.lparams(width = wrapContent) {
+                        topMargin = dip(40)
+                    }
+
+                    enterEditText = editText {
+                        hint = "EditText"
+                    }.lparams(width = dip(150)) {
+                        topMargin = dip(40)
+                    }
+                }
+
+                val applyButton = button("Apply") {
+                    leftPadding = dip(50)
+                    rightPadding = dip(50)
+
+                    onClick {
+                        val enteredText = enterEditText.text.toString()
+                        if (enteredText.isNotBlank()) {
+                            displayTextView.text = enteredText
+                        }
+                        toast("You pressed the button!")
+                    }
+                }.lparams(width = matchParent) {
+                    topMargin = dip(40)
+                }
+
+                checkBox {
+                    text = resources.getString(R.string.disable_button)
+                    setOnClickListener {
+                        val disableCheckBox = it as CheckBox
+                        applyButton.isEnabled = !disableCheckBox.isChecked
+                    }
+                }.lparams() {
+                    topMargin = dip(40)
+                }
             }
 
             // for easy reuse, colors are stored in: res/values/colors.xml
